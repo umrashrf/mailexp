@@ -10,8 +10,9 @@ COPY users /etc/dovecot/
 RUN chown root:dovecot /etc/dovecot/users
 RUN chmod 640 /etc/dovecot/users
 
-RUN adduser -D umair
+RUN adduser -D umair mail
 RUN echo "umair:test" | chpasswd
+RUN chmod 2775 /var/mail
 
 RUN postfix start
 

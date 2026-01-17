@@ -321,7 +321,7 @@ mynetworks = 0.0.0.0/0
 # list this system as their primary or backup MX host. See the
 # permit_mx_backup restriction description in postconf(5).
 #
-relay_domains = $mydestination
+#relay_domains = $mydestination
 
 # INTERNET OR INTRANET
 
@@ -444,7 +444,7 @@ relay_domains = $mydestination
 # "Maildir/" for qmail-style delivery (the / is required).
 #
 #home_mailbox = Mailbox
-home_mailbox = Maildir/
+#home_mailbox = Maildir/
  
 # The mail_spool_directory parameter specifies the directory where
 # UNIX-style mailboxes are kept. The default setting depends on the

@@ -13,6 +13,8 @@ RUN chmod 640 /etc/dovecot/users
 RUN adduser -D umair mail
 RUN echo "umair:test" | chpasswd
 RUN chmod 2775 /var/mail
+RUN awk '{gsub(/smtp\t+25/, "smtp\t\t36245"); print}' /etc/services > /tmp/services
+RUN cp /tmp/services /etc/ && rm /tmp/services
 
 RUN postfix start
 

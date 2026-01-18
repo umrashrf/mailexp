@@ -689,3 +689,5 @@ readme_directory = /usr/share/doc/postfix/readme
 inet_protocols = ipv4
 shlib_directory = /usr/lib/postfix
 meta_directory = /etc/postfix
+
+known_tcp_ports = lmtp=24, smtp=36245, smtps=submissions=465, submission=587

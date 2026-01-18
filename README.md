@@ -1,5 +1,12 @@
 # EMAIL (36245 port)
 
+Note: In this guide, I am using my domain but you must use your domain. You must set A and MX records.
+
+```
+A       YOUR_IP_ADDRESS
+MX      YOUR_DOMAIN             10
+```
+
 ## Build
 
 ```

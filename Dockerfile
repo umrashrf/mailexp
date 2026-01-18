@@ -4,6 +4,7 @@ RUN apk update
 RUN apk add busybox-extras
 RUN apk add postfix dovecot mailutils
 
+COPY etc/hosts etc/
 COPY postfix/* /etc/postfix/
 COPY dovecot.conf /etc/dovecot/
 COPY users /etc/dovecot/

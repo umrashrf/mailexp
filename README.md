@@ -1,11 +1,13 @@
 # EMAIL (36245 port)
 
-Note: In this guide, I am using my domain but you must use your domain. You must set A and MX records.
+Note 1: In this guide, I am using my domain but you must use your domain. You must set A and MX records.
 
 ```
 A       YOUR_IP_ADDRESS
 MX      YOUR_DOMAIN             10
 ```
+
+Note 2: If your firewall is enabled, allow port 36245 on your computer firewall as well as your router.
 
 ## Build
 

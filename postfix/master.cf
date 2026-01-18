@@ -10,7 +10,6 @@
 #               (yes)   (yes)   (no)    (never) (100)
 # ==========================================================================
 smtp      inet  n       -       n       -       -       smtpd
-36245     inet  n       -       y       -       -       smtpd
 #smtp      inet  n       -       n       -       1       postscreen
 #smtpd     pass  -       -       n       -       -       smtpd
 #dnsblog   unix  -       -       n       -       0       dnsblog

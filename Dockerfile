@@ -1,7 +1,7 @@
 FROM alpine:latest
 
 RUN apk update
-RUN apk add busybox-extras
+RUN apk add busybox-extras vim
 RUN apk add postfix dovecot mailutils
 
 COPY postfix/* /etc/postfix/

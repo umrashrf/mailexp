@@ -30,3 +30,14 @@ docker ps
 docker exec -it <DOCKER CONTAINER ID> /bin/sh
 vim /etc/hosts
 ```
+
+Note: 4: If you are not able to send email, please check if postfix is running inside docker. Sorry I am not very good with Docker yet and I am still trying to figure out how to make postfix and dovecot run with the run command.
+
+```
+docker ps
+docker exec -it <DOCKER CONTAINER ID> /bin/sh
+postfix status
+
+# if not running
+postfix start
+```

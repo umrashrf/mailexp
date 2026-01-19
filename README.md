@@ -35,13 +35,13 @@ Note 2: If your firewall is enabled, allow port 36245 on your computer firewall 
 ## Build
 
 ```
-docker build -t riamumail:latest .
+docker build -t mailexp:latest .
 ```
 
 ## Run
 
 ```
-docker run --rm --dns 8.8.8.8 --hostname riamumail.com -p 0.0.0.0:36245:36245 -p 0.0.0.0:10143:143 riamumail
+docker run --rm --dns 8.8.8.8 --hostname riamumail.com -p 0.0.0.0:36245:36245 -p 0.0.0.0:10143:143 mailexp
 ```
 
 Now hopefully you have postfix and dovecot running, hook up your [Thunderbird](https://www.thunderbird.net) with IMAP to send and receive emails.

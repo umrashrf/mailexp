@@ -21,7 +21,7 @@ docker build -t riamumail:latest .
 docker run --rm --dns 8.8.8.8 --hostname riamumail.com -p 0.0.0.0:36245:36245 -p 0.0.0.0:10143:143 riamumail
 ```
 
-Now hopefully you have postfix and dovecot running, hook up your Thunderbird with IMAP to send and receive emails.
+Now hopefully you have postfix and dovecot running, hook up your [Thunderbird](https://www.thunderbird.net) with IMAP to send and receive emails.
 
 ```
 IMAP Host: localhost

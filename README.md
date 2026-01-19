@@ -1,5 +1,15 @@
 # EMAIL (36245 port)
 
+mailexp stands for mail experiment. 
+
+The purpose of this software is to re-invent email not replace it. mailexp will not be able to send email on port 25 which is the default port used by email services like gmail, hotmail, yahoo, etc and you name it. This means that you will NOT be able to send or receive emails from your gmail, hotmail, outlook, live, microsoft, yahoo, fastmail, or any other services which already exist.
+
+mailexp runs on port 36245 and only email servers sending email on that port will be able to receive them. At this moment, this is only mailexp.
+
+For your friends, family, coworkers or any other person to send you an email using mailexp software, they have to also have the same mailexp software.
+
+You do not need to run your mailexp software all the time. mailexp uses postfix which is designed to retry sending email if not sent.
+
 ## Caution:
 
 This is an extremely early minimum viable product (MVP) and privacy and security is overlooked for rapid development. Future releases will add additional security and privacy.

@@ -57,6 +57,8 @@ User: umair
 Pass: test
 ```
 
+Use [canyouseeme.org](canyouseeme.org) to check if port 36245 is open or not.
+
 ** You can change username and password in users file but make sure to also change postfix/aliases and Dockerfile.
 
 Note 3: If you are sending an email from an external server whose hostname is not resolved from public DNS server, you can add the IP and Hostname to the /etc/hosts of the docker container to get around the limitation temporarily.

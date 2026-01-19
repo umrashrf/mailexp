@@ -1,5 +1,10 @@
 # EMAIL (36245 port)
 
+## Requirements:
+
+1. Linux, Mac or Windows running computer or laptop
+2. Download and Install [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+
 Note 1: In this guide, I am using my domain but you must use your domain. You must set A and MX records.
 
 ```

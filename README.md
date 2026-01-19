@@ -1,5 +1,9 @@
 # EMAIL (36245 port)
 
+## Caution:
+
+This is an extremely early minimum viable product (MVP) and privacy and security is overlooked for rapid development. Future releases will add additional security and privacy.
+
 ## Requirements:
 
 1. Linux, Mac or Windows running computer or laptop

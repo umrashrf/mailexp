@@ -35,6 +35,8 @@ Note 2: If your firewall is enabled, allow port 36245 on your computer firewall 
 ## Build
 
 ```
+git clone git@github.com:umrashrf/mailexp.git
+cd mailexp
 docker build -t mailexp:latest .
 ```
 

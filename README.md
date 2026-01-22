@@ -77,8 +77,8 @@ Note: 4: If you are not able to send email, please check if postfix is running i
 
 ```
 docker ps
-docker exec -it <DOCKER CONTAINER ID> /bin/sh postfix status
+docker exec -t <DOCKER CONTAINER ID> /bin/sh postfix status
 
 # if not running
-docker exec -it <DOCKER CONTAINER ID> /bin/sh postfix start
+docker exec -t <DOCKER CONTAINER ID> /bin/sh postfix start
 ```

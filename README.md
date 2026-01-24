@@ -2,6 +2,8 @@
 
 # EMAIL (36245 port)
 
+** There is a GUI version available https://github.com/umrashrf/riamumail-app
+
 mailexp stands for mail experiment. 
 
 The purpose of this software is to re-invent email not replace it. mailexp will not be able to send email on port 25 which is the default port used by email services like gmail, hotmail, yahoo, etc and you name it. This means that you will NOT be able to send or receive emails from your gmail, hotmail, outlook, live, microsoft, yahoo, fastmail, or any other services which already exist.

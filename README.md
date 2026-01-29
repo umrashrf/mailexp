@@ -84,3 +84,7 @@ docker exec -t <DOCKER CONTAINER ID> /bin/sh postfix status
 # if not running
 docker exec -t <DOCKER CONTAINER ID> /bin/sh postfix start
 ```
+
+## Test
+
+Send an email to umair@ashraf.riamumail.com for testing. And, I, a real human will respond.

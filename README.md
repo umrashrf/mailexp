@@ -18,6 +18,8 @@ You do not need to run your mailexp software all the time. mailexp uses postfix 
 
 This is an extremely early minimum viable product (MVP) and privacy and security is overlooked for rapid development. Future releases will add additional security and privacy.
 
+It does not mean that this is not secure. On the contrary, this is supposed to be even more secure than Gmail/Outlook/Yahoo because the server is running in your computer and is not on the internet. You also manage your own encryption keys using GnuPGP or Thunderbird.
+
 ## Requirements:
 
 1. Linux, Mac or Windows running computer or laptop

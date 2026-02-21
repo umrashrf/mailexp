@@ -47,8 +47,11 @@ docker build -t mailexp:latest .
 ## Run
 
 ```
-docker run --rm --dns 8.8.8.8 --hostname riamumail.com -p 0.0.0.0:36245:36245 -p 0.0.0.0:10143:143 mailexp
+docker run --dns 8.8.8.8 --hostname riamumail.com -p 0.0.0.0:36245:36245 -p 0.0.0.0:10143:143 mailexp
 ```
+
+Tip 1: Add `--rm` to destroy container and all files when container stops. Good for short terms testing.
+Tip 2: Add `--restart always` so your container restarts when you restart your computer. Good for long term mail server.
 
 Now hopefully you have postfix and dovecot running, hook up your [Thunderbird](https://www.thunderbird.net) with IMAP to send and receive emails.
 

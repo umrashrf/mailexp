@@ -34,6 +34,13 @@ A       YOUR_IP_ADDRESS
 MX      YOUR_DOMAIN             10
 ```
 
+E.g.
+
+```
+A       ashraf         172.234.92.18
+MX      ashraf         ashraf.riamumail.com      10
+```
+
 Note 2: If your firewall is enabled, allow port 36245 on your computer firewall as well as your router.
 
 ## Build

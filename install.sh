@@ -2,10 +2,9 @@
 
 set -x
 
-curl -L https://github.com/umrashrf/mailexp -o /tmp/mailexp.zip
-mkdir -p /tmp/mailexp
-unzip /tmp/mailexp.zip -d /tmp/mailexp/
-cd /tmp/mailexp
+curl -L https://github.com/umrashrf/mailexp/archive/refs/heads/script.zip -o /tmp/mailexp.zip
+unzip /tmp/mailexp.zip -d /tmp
+cd /tmp/mailexp-script
 
 cp -rf postfix/* /etc/postfix/
 cp -rf dovecot.conf /etc/dovecot/
@@ -27,7 +26,7 @@ echo "umair:test" | chpasswd
 awk '{gsub(/smtp\t+25/, "smtp\t\t36245"); print}' /etc/services > /tmp/services
 cp /tmp/services /etc/ && rm /tmp/services
 
-rm -rf /tmp/mailexp
+rm -rf /tmp/mailexp*
 
 # newaliases && postfix start
 # dovecot -F

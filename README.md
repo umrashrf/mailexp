@@ -61,6 +61,8 @@ Tip 1: Add `--rm` to destroy container and all files when container stops. Good 
 
 Tip 2: Add `--restart always` so your container restarts when you restart your computer. Good for long term mail server.
 
+Tip 3: Add `-d` to run the docker container in the background or skip it to run it in the foreground.
+
 Now hopefully you have postfix and dovecot running, hook up your [Thunderbird](https://www.thunderbird.net) with IMAP to send and receive emails.
 
 ```

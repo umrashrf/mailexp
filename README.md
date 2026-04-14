@@ -66,10 +66,10 @@ Tip 3: Add `-d` to run the docker container in the background or skip it to run 
 Now hopefully you have postfix and dovecot running, hook up your [Thunderbird](https://www.thunderbird.net) with IMAP to send and receive emails.
 
 ```
-IMAP Host: localhost
+IMAP Host: localhost or YOUR_DOMAIN
 IMAP Receive Port: 10143
 
-SMTP: localhost
+SMTP: localhost or YOUR_DOMAIN
 SMTP Port: 36245
 
 User: umair

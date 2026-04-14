@@ -13,7 +13,7 @@ cp users /etc/dovecot/
 chown root:dovecot /etc/dovecot/users
 chmod 640 /etc/dovecot/users
 
-adduser -D umair mail
+usermod -aG mail umair
 
 mkdir -p /home/umair/Maildir/cur && \
     mkdir -p /home/umair/Maildir/new && \

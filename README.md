@@ -47,7 +47,7 @@ docker build -t mailexp:latest .
 ## Run
 
 ```
-docker run --dns 8.8.8.8 --hostname riamumail.com -p 0.0.0.0:36245:36245 -p 0.0.0.0:10143:143 mailexp
+docker run --dns 8.8.8.8 --hostname ashraf.riamumail.com -p 0.0.0.0:36245:36245 -p 0.0.0.0:10143:143 mailexp
 ```
 
 Tip 1: Add `--rm` to destroy container and all files when container stops. Good for short term testing.

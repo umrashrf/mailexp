@@ -97,7 +97,7 @@ mail_owner = postfix
 #
 #myhostname = host.domain.tld
 #myhostname = virtual.domain.tld
-myhostname = ashraf.riamumail.com
+myhostname = android.ashraf.riamumail.com
 
 # The mydomain parameter specifies the local internet domain name.
 # The default is to use $myhostname minus the first component.
@@ -105,7 +105,7 @@ myhostname = ashraf.riamumail.com
 # parameters.
 #
 #mydomain = domain.tld
-mydomain = ashraf.riamumail.com
+mydomain = android.ashraf.riamumail.com
 
 # SENDING MAIL
 # 

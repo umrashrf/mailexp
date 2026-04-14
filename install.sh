@@ -13,6 +13,10 @@ cp users /etc/dovecot/
 chown root:dovecot /etc/dovecot/users
 chmod 640 /etc/dovecot/users
 
+adduser umair
+if ! getent group mail > /dev/null 2>&1; then
+    addgroup mail
+fi
 usermod -aG mail umair
 
 mkdir -p /home/umair/Maildir/cur && \

@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -x
+
 curl -L https://github.com/umrashrf/mailexp -o /tmp/mailexp.zip
 mkdir -p /tmp/mailexp
 unzip /tmp/mailexp.zip -d /tmp/mailexp/

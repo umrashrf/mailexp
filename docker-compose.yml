@@ -51,9 +51,8 @@ services:
         postconf -e "myhostname=$$HOSTNAME" &&
         postconf -e "smtpd_tls_cert_file=/etc/ssl/mail/server.pem" &&
         postconf -e "smtpd_tls_key_file=/etc/ssl/mail/server.key" &&
-        postconf -e "smtpd_tls_security_level=yes" &&
-        postconf -e "smtpd_tls_security_level=may" &&
-        postconf -e "smtp_tls_security_level=may" &&
+        postconf -e "smtp_tls_security_level=encrypt" &&
+        postconf -e "smtpd_tls_security_level=encrypt" &&
         postconf -e "smtpd_tls_auth_only=yes" &&
         postconf -e "smtpd_tls_loglevel=1" &&
         postconf -e "smtpd_tls_received_header=yes" &&

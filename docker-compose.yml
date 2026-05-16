@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   postfix:
     image: alpine:latest
@@ -14,6 +12,7 @@ services:
       - "36245:36245"
     volumes:
       - ./postfix:/tmp/postfix-config:ro
+      - ./certs:/etc/ssl/mail
       - maildata:/home/${USERNAME:-your_username}/Maildir
       - postfix-spool:/var/spool/postfix
     networks:
@@ -21,7 +20,7 @@ services:
     command: |
       sh -c '
         apk update &&
-        apk add busybox-extras vim postfix mailutils &&
+        apk add busybox-extras vim postfix mailutils openssl cyrus-sasl-login &&
         
         # Copy custom postfix configs AFTER installation
         cp -r /tmp/postfix-config/* /etc/postfix/ &&
@@ -36,12 +35,42 @@ services:
         mkdir -p /home/$$USERNAME/Maildir/tmp &&
         chown $$USERNAME:$$USERNAME -R /home/$$USERNAME/Maildir &&
         
-        # Modify services file for custom SMTP port
-        awk "{gsub(/smtp\t+25/, \"smtp\t\t36245\"); print}" /etc/services > /tmp/services &&
-        cp /tmp/services /etc/ && rm /tmp/services &&
+        # Generate self-signed certificate if none exists
+        mkdir -p /etc/ssl/mail &&
         
-        # Initialize and start postfix
+        if [ ! -f /etc/ssl/mail/server.pem ]; then
+          openssl req -new -x509 -nodes -days 3650 \
+            -subj "/C=US/ST=None/L=None/O=Mail/CN=$$HOSTNAME" \
+            -out /etc/ssl/mail/server.pem \
+            -keyout /etc/ssl/mail/server.key
+        fi &&
+        
+        chmod 600 /etc/ssl/mail/server.key &&
+        
+        # Configure Postfix STARTTLS
+        postconf -e "myhostname=$$HOSTNAME" &&
+        postconf -e "smtpd_tls_cert_file=/etc/ssl/mail/server.pem" &&
+        postconf -e "smtpd_tls_key_file=/etc/ssl/mail/server.key" &&
+        postconf -e "smtpd_use_tls=yes" &&
+        postconf -e "smtpd_tls_security_level=may" &&
+        postconf -e "smtp_tls_security_level=may" &&
+        postconf -e "smtpd_tls_auth_only=yes" &&
+        postconf -e "smtpd_tls_loglevel=1" &&
+        postconf -e "smtpd_tls_received_header=yes" &&
+        postconf -e "broken_sasl_auth_clients=yes" &&
+        postconf -e "smtpd_sasl_auth_enable=yes" &&
+        postconf -e "smtpd_sasl_security_options=noanonymous" &&
+        postconf -e "smtpd_recipient_restrictions=permit_sasl_authenticated,reject_unauth_destination" &&
+        
+        # Configure custom SMTP port
+        postconf -M smtp/inet="smtp inet n - n - - smtpd" &&
+        
+        sed -i "s/^smtp.*inet.*/36245 inet n - n - - smtpd/" /etc/postfix/master.cf &&
+        
+        # Initialize aliases
         newaliases &&
+        
+        # Start postfix
         postfix start &&
         
         # Keep container running
@@ -59,10 +88,11 @@ services:
       - USERNAME=${USERNAME:-your_username}
       - PASSWORD=${PASSWORD:-your_password}
     ports:
-      - "10143:143"   # IMAP
+      - "10143:143"
     volumes:
       - ./dovecot.conf:/tmp/dovecot.conf:ro
       - ./users:/tmp/users:ro
+      - ./certs:/etc/ssl/mail
       - maildata:/home/${USERNAME:-your_username}/Maildir
     networks:
       - mailexp-network
@@ -71,11 +101,11 @@ services:
         apk update &&
         apk add busybox-extras vim dovecot &&
         
-        # Copy config files from temp location
+        # Copy config files
         cp /tmp/dovecot.conf /etc/dovecot/dovecot.conf &&
         cp /tmp/users /etc/dovecot/users &&
         
-        # Set proper permissions on users file
+        # Permissions
         chown root:dovecot /etc/dovecot/users &&
         chmod 640 /etc/dovecot/users &&
         
@@ -89,18 +119,22 @@ services:
         mkdir -p /home/$$USERNAME/Maildir/tmp &&
         chown $$USERNAME:$$USERNAME -R /home/$$USERNAME/Maildir &&
         
-        # Create dovecot log file
-        touch /var/log/dovecot.log &&
+        # Enable SSL/TLS for Dovecot
+        echo "ssl = yes" >> /etc/dovecot/dovecot.conf
+        echo "ssl_server_cert_file = /etc/ssl/mail/server.pem" >> /etc/dovecot/dovecot.conf
+        echo "ssl_server_key_file = /etc/ssl/mail/server.key" >> /etc/dovecot/dovecot.conf
+        echo "auth_mechanisms = plain login" >> /etc/dovecot/dovecot.conf
+        echo "disable_plaintext_auth = yes" >> /etc/dovecot/dovecot.conf
         
-        # Configure dovecot to log to file
+        # Logging
+        touch /var/log/dovecot.log &&
         echo "log_path = /var/log/dovecot.log" >> /etc/dovecot/dovecot.conf &&
         echo "info_log_path = /var/log/dovecot.log" >> /etc/dovecot/dovecot.conf &&
         echo "debug_log_path = /var/log/dovecot.log" >> /etc/dovecot/dovecot.conf &&
         
-        # Start dovecot in background
+        # Start dovecot
         dovecot &&
         
-        # Tail dovecot logs to stdout for docker logs
         tail -f /var/log/dovecot.log
       '
     restart: unless-stopped

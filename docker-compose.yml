@@ -1,0 +1,98 @@
+services:
+  postfix:
+    image: alpine:latest
+    container_name: mailexp-postfix
+    hostname: ashraf.riamumail.com
+    environment:
+      - USERNAME=${USERNAME:-umair}
+      - PASSWORD=${PASSWORD:-test}
+    ports:
+      - "36245:36245"
+    volumes:
+      - ./postfix:/etc/postfix:ro
+      - maildata:/home/umair/Maildir
+      - postfix-spool:/var/spool/postfix
+    networks:
+      - mailexp-network
+    command: |
+      sh -c '
+        apk update &&
+        apk add busybox-extras vim postfix mailutils &&
+        
+        # Create mail user
+        adduser -D umair mail &&
+        echo "$$USERNAME:$$PASSWORD" | chpasswd &&
+        
+        # Create Maildir structure
+        mkdir -p /home/umair/Maildir/cur &&
+        mkdir -p /home/umair/Maildir/new &&
+        mkdir -p /home/umair/Maildir/tmp &&
+        chown umair:umair -R /home/umair/Maildir &&
+        
+        # Modify services file for custom SMTP port
+        awk "{gsub(/smtp\t+25/, \"smtp\t\t36245\"); print}" /etc/services > /tmp/services &&
+        cp /tmp/services /etc/ && rm /tmp/services &&
+        
+        # Initialize and start postfix
+        newaliases &&
+        postfix start &&
+        
+        # Keep container running
+        tail -f /var/log/maillog 2>/dev/null || tail -f /dev/null
+      '
+    restart: unless-stopped
+
+  dovecot:
+    image: alpine:latest
+    container_name: mailexp-dovecot
+    hostname: ashraf.riamumail.com
+    environment:
+      - USERNAME=${USERNAME:-umair}
+      - PASSWORD=${PASSWORD:-test}
+    ports:
+      - "10143:143"   # IMAP
+    volumes:
+      - ./dovecot.conf:/tmp/dovecot.conf:ro
+      - ./users:/tmp/users:ro
+      - maildata:/home/umair/Maildir
+    networks:
+      - mailexp-network
+    command: |
+      sh -c '
+        apk update &&
+        apk add busybox-extras vim dovecot &&
+        
+        # Copy config files from temp location
+        cp /tmp/dovecot.conf /etc/dovecot/dovecot.conf &&
+        cp /tmp/users /etc/dovecot/users &&
+        
+        # Set proper permissions on users file
+        chown root:dovecot /etc/dovecot/users &&
+        chmod 640 /etc/dovecot/users &&
+        
+        # Create mail user
+        adduser -D umair mail &&
+        echo "$$USERNAME:$$PASSWORD" | chpasswd &&
+        
+        # Create Maildir structure (should already exist from shared volume)
+        mkdir -p /home/umair/Maildir/cur &&
+        mkdir -p /home/umair/Maildir/new &&
+        mkdir -p /home/umair/Maildir/tmp &&
+        chown umair:umair -R /home/umair/Maildir &&
+        
+        # Start dovecot in foreground
+        dovecot -F
+      '
+    restart: unless-stopped
+    depends_on:
+      - postfix
+
+volumes:
+  maildata:
+    driver: local
+  postfix-spool:
+    driver: local
+
+networks:
+  mailexp-network:
+    driver: bridge

@@ -1,16 +1,19 @@
+version: '3.8'
+
 services:
   postfix:
     image: alpine:latest
     container_name: mailexp-postfix
-    hostname: ashraf.riamumail.com
+    hostname: ${HOSTNAME:-mail.domain.com}
     environment:
-      - USERNAME=${USERNAME:-umair}
-      - PASSWORD=${PASSWORD:-test}
+      - HOSTNAME=${HOSTNAME:-mail.domain.com}
+      - USERNAME=${USERNAME:-your_username}
+      - PASSWORD=${PASSWORD:-your_password}
     ports:
       - "36245:36245"
     volumes:
-      - ./postfix:/etc/postfix:ro
-      - maildata:/home/umair/Maildir
+      - ./postfix:/tmp/postfix-config:ro
+      - maildata:/home/${USERNAME:-your_username}/Maildir
       - postfix-spool:/var/spool/postfix
     networks:
       - mailexp-network
@@ -19,15 +22,18 @@ services:
         apk update &&
         apk add busybox-extras vim postfix mailutils &&
         
+        # Copy custom postfix configs AFTER installation
+        cp -r /tmp/postfix-config/* /etc/postfix/ &&
+        
         # Create mail user
-        adduser -D umair mail &&
+        adduser -D $$USERNAME mail &&
         echo "$$USERNAME:$$PASSWORD" | chpasswd &&
         
         # Create Maildir structure
-        mkdir -p /home/umair/Maildir/cur &&
-        mkdir -p /home/umair/Maildir/new &&
-        mkdir -p /home/umair/Maildir/tmp &&
-        chown umair:umair -R /home/umair/Maildir &&
+        mkdir -p /home/$$USERNAME/Maildir/cur &&
+        mkdir -p /home/$$USERNAME/Maildir/new &&
+        mkdir -p /home/$$USERNAME/Maildir/tmp &&
+        chown $$USERNAME:$$USERNAME -R /home/$$USERNAME/Maildir &&
         
         # Modify services file for custom SMTP port
         awk "{gsub(/smtp\t+25/, \"smtp\t\t36245\"); print}" /etc/services > /tmp/services &&
@@ -38,23 +44,24 @@ services:
         postfix start &&
         
         # Keep container running
-        tail -f /var/log/maillog 2>/dev/null || tail -f /dev/null
+        tail -f /var/log/mail.log
       '
     restart: unless-stopped
 
   dovecot:
     image: alpine:latest
     container_name: mailexp-dovecot
-    hostname: ashraf.riamumail.com
+    hostname: ${HOSTNAME:-mail.domain.com}
     environment:
-      - USERNAME=${USERNAME:-umair}
-      - PASSWORD=${PASSWORD:-test}
+      - HOSTNAME=${HOSTNAME:-mail.domain.com}
+      - USERNAME=${USERNAME:-your_username}
+      - PASSWORD=${PASSWORD:-your_password}
     ports:
       - "10143:143"   # IMAP
     volumes:
       - ./dovecot.conf:/tmp/dovecot.conf:ro
       - ./users:/tmp/users:ro
-      - maildata:/home/umair/Maildir
+      - maildata:/home/${USERNAME:-your_username}/Maildir
     networks:
       - mailexp-network
     command: |
@@ -71,17 +78,28 @@ services:
         chmod 640 /etc/dovecot/users &&
         
         # Create mail user
-        adduser -D umair mail &&
+        adduser -D $$USERNAME mail &&
         echo "$$USERNAME:$$PASSWORD" | chpasswd &&
         
         # Create Maildir structure (should already exist from shared volume)
-        mkdir -p /home/umair/Maildir/cur &&
-        mkdir -p /home/umair/Maildir/new &&
-        mkdir -p /home/umair/Maildir/tmp &&
-        chown umair:umair -R /home/umair/Maildir &&
+        mkdir -p /home/$$USERNAME/Maildir/cur &&
+        mkdir -p /home/$$USERNAME/Maildir/new &&
+        mkdir -p /home/$$USERNAME/Maildir/tmp &&
+        chown $$USERNAME:$$USERNAME -R /home/$$USERNAME/Maildir &&
         
-        # Start dovecot in foreground
-        dovecot -F
+        # Create dovecot log file
+        touch /var/log/dovecot.log &&
+        
+        # Configure dovecot to log to file
+        echo "log_path = /var/log/dovecot.log" >> /etc/dovecot/dovecot.conf &&
+        echo "info_log_path = /var/log/dovecot.log" >> /etc/dovecot/dovecot.conf &&
+        echo "debug_log_path = /var/log/dovecot.log" >> /etc/dovecot/dovecot.conf &&
+        
+        # Start dovecot in background
+        dovecot &&
+        
+        # Tail dovecot logs to stdout for docker logs
+        tail -f /var/log/dovecot.log
       '
     restart: unless-stopped
     depends_on:

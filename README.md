@@ -48,20 +48,16 @@ Note 2: If your firewall is enabled, allow port 36245 on your computer firewall 
 ```
 git clone git@github.com:umrashrf/mailexp.git
 cd mailexp
-docker build -t mailexp:latest .
+vim .env
 ```
 
 ## Run
 
 ```
-docker run --dns 8.8.8.8 --hostname ashraf.riamumail.com -p 0.0.0.0:36245:36245 -p 0.0.0.0:10143:143 mailexp
+docker-compose up -d
 ```
 
-Tip 1: Add `--rm` to destroy container and all files when container stops. Good for short term testing.
-
-Tip 2: Add `--restart always` so your container restarts when you restart your computer. Good for long term mail server.
-
-Tip 3: Add `-d` to run the docker container in the background or skip it to run it in the foreground.
+Tip 1: Uncomment `restart: always` in docker-compose.yml so your container restarts when you restart your computer. Good for long term mail server.
 
 Now hopefully you have postfix and dovecot running, hook up your [Thunderbird](https://www.thunderbird.net) with IMAP to send and receive emails.
 

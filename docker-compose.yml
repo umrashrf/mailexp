@@ -123,8 +123,6 @@ services:
         echo "ssl = yes" >> /etc/dovecot/dovecot.conf
         echo "ssl_server_cert_file = /etc/ssl/mail/server.pem" >> /etc/dovecot/dovecot.conf
         echo "ssl_server_key_file = /etc/ssl/mail/server.key" >> /etc/dovecot/dovecot.conf
-        echo "auth_mechanisms = plain login" >> /etc/dovecot/dovecot.conf
-        echo "disable_plaintext_auth = yes" >> /etc/dovecot/dovecot.conf
         
         # Logging
         touch /var/log/dovecot.log &&

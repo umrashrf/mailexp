@@ -1,1 +1,1 @@
-umair:{PLAIN}test:1000:1000::/home/umair:/bin/false
+umair:{SHA512-CRYPT}$6$kZdfkYgc8AYD9CkW$hOAY8HW3XhormzlIKHMhB3GLdqrh8CEuSSwpV8FrxR0ra5swV1Fv0QYbeitNN0DWPKd1bWpk2sZr8VZQwO.950:1000:1000::/home/umair:/bin/false

@@ -14,13 +14,13 @@ services:
       - ./postfix:/tmp/postfix-config:ro
       - ./certs:/etc/ssl/mail
       - maildata:/home/${USERNAME:-your_username}/Maildir
-      - postfix-spool:/var/spool/postfix
+      - postfix-spool:/var/spool/postfix/private
     networks:
       - mailexp-network
     command: |
       sh -c '
         apk update &&
-        apk add busybox-extras vim postfix mailutils openssl cyrus-sasl-login &&
+        apk add busybox-extras vim postfix mailutils openssl &&
         
         # Copy custom postfix configs AFTER installation
         cp -r /tmp/postfix-config/* /etc/postfix/ &&
@@ -58,6 +58,8 @@ services:
         postconf -e "smtpd_tls_received_header=yes" &&
         postconf -e "broken_sasl_auth_clients=yes" &&
         postconf -e "smtpd_sasl_auth_enable=yes" &&
+        postconf -e "smtpd_sasl_type=dovecot" &&
+        postconf -e "smtpd_sasl_path=private/auth" &&
         postconf -e "smtpd_sasl_security_options=noanonymous" &&
         postconf -e "smtpd_recipient_restrictions=permit_sasl_authenticated,reject_unauth_destination" &&
         
@@ -93,6 +95,7 @@ services:
       - ./users:/tmp/users:ro
       - ./certs:/etc/ssl/mail
       - maildata:/home/${USERNAME:-your_username}/Maildir
+      - postfix-spool:/var/spool/postfix/private
     networks:
       - mailexp-network
     command: |
@@ -107,6 +110,9 @@ services:
         # Permissions
         chown root:dovecot /etc/dovecot/users &&
         chmod 640 /etc/dovecot/users &&
+
+        addgroup -g 5000 -S postfix &&
+        adduser -u 5000 -S -D -H -G postfix -s /sbin/nologin -h /var/spool/postfix postfix &&
         
         # Create mail user
         adduser -D $$USERNAME mail &&
@@ -119,9 +125,9 @@ services:
         chown $$USERNAME:$$USERNAME -R /home/$$USERNAME/Maildir &&
         
         # Enable SSL/TLS for Dovecot
-        echo "ssl = yes" >> /etc/dovecot/dovecot.conf
-        echo "ssl_server_cert_file = /etc/ssl/mail/server.pem" >> /etc/dovecot/dovecot.conf
-        echo "ssl_server_key_file = /etc/ssl/mail/server.key" >> /etc/dovecot/dovecot.conf
+        echo "ssl = required" >> /etc/dovecot/dovecot.conf &&
+        echo "ssl_server_cert_file = /etc/ssl/mail/server.pem" >> /etc/dovecot/dovecot.conf &&
+        echo "ssl_server_key_file = /etc/ssl/mail/server.key" >> /etc/dovecot/dovecot.conf &&
         
         # Logging
         touch /var/log/dovecot.log &&

@@ -22,7 +22,7 @@
     -o smtpd_tls_auth_only=yes
     -o smtpd_sasl_security_options=noanonymous
     -o smtpd_client_restrictions=permit_sasl_authenticated,reject
-    -o smtpd_relay_restrictions=permit_sasl_authenticated,reject_unauth_destination
+    -o smtpd_relay_restrictions=permit_mynetworks,permit_sasl_authenticated,reject_unauth_destination   
 #submission inet n       -       n       -       -       smtpd
 #  -o syslog_name=postfix/submission
 #  -o smtpd_forbid_unauth_pipelining=no

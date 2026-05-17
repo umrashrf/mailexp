@@ -74,7 +74,7 @@ services:
         newaliases &&
         
         # Start postfix
-        postfix start &&
+        postfix start || tail -f /var/log/mail.log &&
         
         # Keep container running
         tail -f /var/log/mail.log
@@ -138,7 +138,7 @@ services:
         echo "debug_log_path = /var/log/dovecot.log" >> /etc/dovecot/dovecot.conf &&
         
         # Start dovecot
-        dovecot &&
+        dovecot || tail -f /var/log/dovecot.log &&
         
         tail -f /var/log/dovecot.log
       '

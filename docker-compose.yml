@@ -36,8 +36,8 @@ services:
         chown $$USERNAME:$$USERNAME -R /home/$$USERNAME/Maildir &&
         
         # Modify services file for custom SMTP port
-        awk "{gsub(/ashraf\.riamumail\.com/, \"$$HOSTNAME\"); print}" /etc/postfix/main.cf > /etc/postfix/main.cf
-        awk "{gsub(/ashraf\.riamumail\.com/, \"$$HOSTNAME\"); print}" /etc/postfix/aliases > /etc/postfix/aliases
+        awk "{gsub(/ashraf\.riamumail\.com/, \"$$HOSTNAME\"); print}" /etc/postfix/main.cf > /etc/postfix/main.cf &&
+        awk "{gsub(/ashraf\.riamumail\.com/, \"$$HOSTNAME\"); print}" /etc/postfix/aliases > /etc/postfix/aliases &&
         awk "{gsub(/smtp\t+25/, \"smtp\t\t36245\"); print}" /etc/services > /tmp/services &&
         cp /tmp/services /etc/ && rm /tmp/services &&
         

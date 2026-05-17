@@ -25,7 +25,7 @@ services:
         # Copy custom postfix configs AFTER installation
         cp -r /tmp/postfix-config/* /etc/postfix/ &&
         
-        chown postfix:postfix -R /var/spool/postfix &&
+        chown postfix:postfix -R /var/spool/postfix/private &&
 
         # Create mail user
         adduser -D $$USERNAME mail &&

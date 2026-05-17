@@ -3,7 +3,6 @@ version: '3.8'
 services:
   postfix:
     image: alpine:latest
-    #restart: always
     container_name: mailexp-postfix
     hostname: ${HOSTNAME:-mail.domain.com}
     environment:
@@ -53,7 +52,6 @@ services:
 
   dovecot:
     image: alpine:latest
-    #restart: always
     container_name: mailexp-dovecot
     hostname: ${HOSTNAME:-mail.domain.com}
     environment:

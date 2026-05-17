@@ -20,7 +20,7 @@ services:
     command: |
       sh -c '
         apk update &&
-        apk add busybox-extras vim postfix mailutils openssl &&
+        apk add busybox-extras vim postfix dovecot mailutils openssl &&
         
         # Copy custom postfix configs AFTER installation
         cp -r /tmp/postfix-config/* /etc/postfix/ &&
